@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-TOKEN = os.getenv("9009736460:AAFSAM0z70hVlsf4A9yWzUHoIN5_XTLA22w")
+TOKEN = os.getenv("BOT_TOKEN")
 
-bot = Bot(token=9009736460:AAFSAM0z70hVlsf4A9yWzUHoIN5_XTLA22w)
+bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 main_menu = ReplyKeyboardMarkup(
@@ -27,7 +27,7 @@ main_menu = ReplyKeyboardMarkup(
 @dp.message(CommandStart())
 async def start(message: Message):
     await message.answer(
-        "🇨🇳 Добро пожаловать в Blast Shop!\n\n"
+        "🇨🇳 Добро пожаловать в China Store!\n\n"
         "Покупай товары из Китая с доставкой в Европу.",
         reply_markup=main_menu
     )
