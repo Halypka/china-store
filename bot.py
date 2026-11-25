@@ -19,6 +19,7 @@ load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 
 bot = Bot(token=TOKEN)
+ADMIN_ID = 9214809528
 dp = Dispatcher()
 
 # Temporary language storage
