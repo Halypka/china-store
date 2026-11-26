@@ -27,3 +27,6 @@ Customers send product links or photos from **Catalog**. Each request appears in
 ## Windows executable
 
 Every push to the bot branch builds `ChinaStoreBot.exe` in GitHub Actions. Download the `ChinaStoreBot-windows` artifact from the workflow run, extract it, copy `.env.example` to `.env`, fill in the bot settings, and run `ChinaStoreBot.exe`. Keep `.env` and `china_store.sqlite3` next to the executable; do not upload `.env` to GitHub.
+
+To install a newer version later, stop the bot and double-click `Обновить бота.bat` in the same folder as `ChinaStoreBot.exe`. The updater downloads the latest public Windows release and replaces only the executable and `.env.example`; it keeps your `.env` and order database. An internet connection is required.
+
