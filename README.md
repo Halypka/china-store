@@ -23,3 +23,7 @@ Telegram bot for personal shopping from China with delivery across Europe.
 The bot creates `china_store.sqlite3` on first run. It stores the order counter, selected languages, admin reply mappings, and requests there. Keep the database file between restarts.
 
 Customers send product links or photos from **Catalog**. Each request appears in the admin chat with **Approve** and **Decline** buttons. Approving or declining notifies the customer, and the current status appears in **My requests**. After approving, reply to the request card with the payment details; the bot forwards your reply to the customer. Customers can change their language at any time from the **Language** menu button.
+
+## Windows executable
+
+Every push to the bot branch builds `ChinaStoreBot.exe` in GitHub Actions. Download the `ChinaStoreBot-windows` artifact from the workflow run, extract it, copy `.env.example` to `.env`, fill in the bot settings, and run `ChinaStoreBot.exe`. Keep `.env` and `china_store.sqlite3` next to the executable; do not upload `.env` to GitHub.
