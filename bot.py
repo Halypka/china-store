@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import sqlite3
+import sys
 from pathlib import Path
 
 from aiogram import Bot, Dispatcher, F
@@ -18,12 +19,15 @@ from aiogram.types import (
 )
 from dotenv import load_dotenv
 
-load_dotenv()
+APP_DIR = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parent
+load_dotenv(APP_DIR / ".env")
 
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "9214809528"))
 SUPPORT_USERNAME = os.getenv("SUPPORT_USERNAME", "blastshop_manager").strip().lstrip("@")
-DB_PATH = Path(os.getenv("BOT_DB_PATH", "china_store.sqlite3"))
+DB_PATH = Path(os.getenv("BOT_DB_PATH", str(APP_DIR / "china_store.sqlite3")))
+if not DB_PATH.is_absolute():
+    DB_PATH = APP_DIR / DB_PATH
 dp = Dispatcher()
 
 # Interaction states are short-lived; language, orders, and message claims are persistent.
