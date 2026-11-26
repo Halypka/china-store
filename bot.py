@@ -43,16 +43,19 @@ TEXTS = {
         "catalog_info": "Send a product link or photo here. Our manager will look for a similar item and contact you.",
         "received": "Your request №{order} has been received. Our manager will check the product and contact you.",
         "no_orders": "📦 You haven't submitted any requests yet.",
-        "orders_list": "📦 Your requests:", "status_pending": "waiting for review", "status_approved": "approved", "status_rejected": "declined",
+        "orders_list": "📦 Your requests:", "status_pending": "waiting for review", "status_approved": "approved", "status_awaiting_payment": "awaiting payment", "status_paid": "payment confirmed — delivery in 14–21 days", "status_rejected": "declined",
         "support_info": "💬 Write your message here and our manager will receive it. You can send text, photos, videos, voice messages, documents, and other common message types.",
         "support_contact": "Or message the manager directly: @{username}", "support_button": "✉️ Message the manager",
         "support_sent": "✅ Your message has been sent to our manager.", "language_info": "🌐 Choose your language:",
         "changed": "✅ Language changed!", "invalid_link": "That doesn't look like a product link. Please send a valid link or a product photo.",
         "send_failed": "We couldn't send your message right now. Please try again shortly.",
-        "approved_notice": "✅ Your request №{order} has been approved. The manager will send payment details in a separate message.",
+        "approved_notice": "✅ Your request №{order} is approved and awaiting payment. The manager will send the payment details in a separate message.",
+        "paid_notice": "✅ Payment for request №{order} is confirmed. Delivery will take 14–21 days.",
         "rejected_notice": "Your request №{order} was not approved. Contact the manager if you have questions.",
         "admin_approve": "✅ Approve", "admin_reject": "✖️ Decline", "admin_done": "Request №{order}: {status}",
-        "admin_approved_prompt": "✅ Request №{order} approved. Reply to this request with the payment details; I will forward your message to the customer.",
+        "admin_approved_prompt": "✅ Request №{order} approved and awaiting payment. Reply to the request card with the payment details, then press the button below after payment.",
+        "admin_payment_confirm": "✅ Payment confirmed",
+        "admin_paid_prompt": "Payment for request №{order} confirmed; the customer was notified about delivery in 14–21 days.",
         "admin_rejected_prompt": "Request №{order} declined.",
         "admin_db_error": "Couldn't update the request. Check the bot log and try again.",
         "admin_already": "This request has already been reviewed.", "order_not_found": "Request not found.", "not_admin": "You are not allowed to manage requests.",
@@ -66,16 +69,19 @@ TEXTS = {
         "catalog_info": "Отправьте сюда ссылку или фото товара. Менеджер подберёт похожий товар и свяжется с вами.",
         "received": "Ваша заявка №{order} принята. Менеджер проверит товар и свяжется с вами.",
         "no_orders": "📦 У вас пока нет заявок.",
-        "orders_list": "📦 Ваши заявки:", "status_pending": "на проверке", "status_approved": "согласована", "status_rejected": "отклонена",
+        "orders_list": "📦 Ваши заявки:", "status_pending": "на проверке", "status_approved": "согласована", "status_awaiting_payment": "ожидает оплаты", "status_paid": "оплата подтверждена — доставка 14–21 день", "status_rejected": "отклонена",
         "support_info": "💬 Напишите сообщение здесь — его получит наш менеджер. Можно отправлять текст, фото, видео, голосовые сообщения, документы и другие распространённые типы сообщений.",
         "support_contact": "Или напишите менеджеру напрямую: @{username}", "support_button": "✉️ Написать менеджеру",
         "support_sent": "✅ Ваше сообщение отправлено менеджеру.", "language_info": "🌐 Выберите язык:",
         "changed": "✅ Язык изменён!", "invalid_link": "Это не похоже на ссылку на товар. Отправьте корректную ссылку или фотографию товара.",
         "send_failed": "Не удалось отправить сообщение. Пожалуйста, попробуйте ещё раз позже.",
-        "approved_notice": "✅ Ваша заявка №{order} согласована. Менеджер пришлёт реквизиты для оплаты отдельным сообщением.",
+        "approved_notice": "✅ Ваша заявка №{order} согласована и ожидает оплаты. Менеджер пришлёт реквизиты отдельным сообщением.",
+        "paid_notice": "✅ Оплата по заявке №{order} подтверждена. Доставка займёт 14–21 день.",
         "rejected_notice": "Заявка №{order} не согласована. Если есть вопросы, напишите менеджеру.",
         "admin_approve": "✅ Согласовать", "admin_reject": "✖️ Отклонить", "admin_done": "Заявка №{order}: {status}",
-        "admin_approved_prompt": "✅ Заявка №{order} согласована. Ответь через Reply на эту карточку и отправь реквизиты — я перешлю сообщение клиенту.",
+        "admin_approved_prompt": "✅ Заявка №{order} согласована и теперь ожидает оплаты. Ответь через Reply на карточку заявки и отправь реквизиты. Когда клиент оплатит, нажми кнопку ниже.",
+        "admin_payment_confirm": "✅ Оплата подтверждена",
+        "admin_paid_prompt": "Оплата по заявке №{order} подтверждена. Клиенту отправлено сообщение о доставке 14–21 день.",
         "admin_rejected_prompt": "Заявка №{order} отклонена.",
         "admin_db_error": "Не удалось обновить заявку. Проверь журнал бота и попробуй ещё раз.",
         "admin_already": "Эта заявка уже обработана.", "order_not_found": "Заявка не найдена.", "not_admin": "У вас нет прав управлять заявками.",
@@ -89,16 +95,19 @@ TEXTS = {
         "catalog_info": "Invia qui un link o una foto del prodotto. Il manager cercherà un articolo simile e ti contatterà.",
         "received": "La tua richiesta n. {order} è stata ricevuta. Il nostro manager controllerà il prodotto e ti contatterà.",
         "no_orders": "📦 Non hai ancora inviato richieste.",
-        "orders_list": "📦 Le tue richieste:", "status_pending": "in attesa di revisione", "status_approved": "approvata", "status_rejected": "rifiutata",
+        "orders_list": "📦 Le tue richieste:", "status_pending": "in attesa di revisione", "status_approved": "approvata", "status_awaiting_payment": "in attesa di pagamento", "status_paid": "pagamento confermato — consegna in 14–21 giorni", "status_rejected": "rifiutata",
         "support_info": "💬 Scrivi qui il tuo messaggio e il nostro manager lo riceverà. Puoi inviare testo, foto, video, messaggi vocali, documenti e altri tipi di messaggi comuni.",
         "support_contact": "Oppure scrivi direttamente al manager: @{username}", "support_button": "✉️ Scrivi al manager",
         "support_sent": "✅ Il messaggio è stato inviato al nostro manager.", "language_info": "🌐 Scegli la tua lingua:",
         "changed": "✅ Lingua modificata!", "invalid_link": "Questo non sembra un link al prodotto. Invia un link valido o una foto del prodotto.",
         "send_failed": "Non siamo riusciti a inviare il messaggio. Riprova tra poco.",
-        "approved_notice": "✅ La tua richiesta n. {order} è stata approvata. Il manager invierà i dati per il pagamento in un messaggio separato.",
+        "approved_notice": "✅ La tua richiesta n. {order} è approvata e in attesa di pagamento. Il manager invierà i dati in un messaggio separato.",
+        "paid_notice": "✅ Il pagamento per la richiesta n. {order} è confermato. La consegna richiederà 14–21 giorni.",
         "rejected_notice": "La richiesta n. {order} non è stata approvata. Contatta il manager se hai domande.",
         "admin_approve": "✅ Approva", "admin_reject": "✖️ Rifiuta", "admin_done": "Richiesta n. {order}: {status}",
-        "admin_approved_prompt": "✅ Richiesta n. {order} approvata. Rispondi a questa richiesta con i dati di pagamento; inoltrerò il messaggio al cliente.",
+        "admin_approved_prompt": "✅ Richiesta n. {order} approvata e in attesa di pagamento. Rispondi alla scheda con i dati di pagamento. Dopo aver confermato il pagamento, premi il pulsante qui sotto.",
+        "admin_payment_confirm": "✅ Pagamento confermato",
+        "admin_paid_prompt": "Pagamento per la richiesta n. {order} confermato; il cliente è stato informato della consegna in 14–21 giorni.",
         "admin_rejected_prompt": "Richiesta n. {order} rifiutata.",
         "admin_db_error": "Impossibile aggiornare la richiesta. Controlla il log del bot e riprova.",
         "admin_already": "Questa richiesta è già stata gestita.", "order_not_found": "Richiesta non trovata.", "not_admin": "Non hai i permessi per gestire le richieste.",
@@ -149,9 +158,9 @@ def claim_message(user_id: int, message_id: int) -> bool:
         return cursor.rowcount == 1
 
 
-def update_order_status(order_id: int, status: str) -> tuple[int, bool] | None:
+def update_order_status(order_id: int, status: str, expected_status: str = "pending") -> tuple[int, bool] | None:
     with sqlite3.connect(DB_PATH) as conn:
-        cursor = conn.execute("UPDATE orders SET status = ? WHERE order_id = ? AND status = 'pending'", (status, order_id))
+        cursor = conn.execute("UPDATE orders SET status = ? WHERE order_id = ? AND status = ?", (status, order_id, expected_status))
         row = conn.execute("SELECT customer_id FROM orders WHERE order_id = ?", (order_id,)).fetchone()
         conn.commit()
     return (row[0], cursor.rowcount == 1) if row else None
@@ -191,6 +200,12 @@ def order_review_keyboard(order_id: int) -> InlineKeyboardMarkup:
         InlineKeyboardButton(text=TEXTS["ru"]["admin_approve"], callback_data=f"order:approve:{order_id}"),
         InlineKeyboardButton(text=TEXTS["ru"]["admin_reject"], callback_data=f"order:reject:{order_id}"),
     ]])
+
+
+def payment_confirm_keyboard(order_id: int) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
+        text=TEXTS["ru"]["admin_payment_confirm"], callback_data=f"payment:confirm:{order_id}"
+    )]])
 
 
 def orders_text(user_id: int, lang: str) -> str:
@@ -305,7 +320,7 @@ async def review_order(callback: CallbackQuery) -> None:
     try:
         _, action, raw_order_id = callback.data.split(":", 2)
         order_id = int(raw_order_id)
-        status = {"approve": "approved", "reject": "rejected"}[action]
+        status = {"approve": "awaiting_payment", "reject": "rejected"}[action]
     except (ValueError, KeyError):
         await callback.answer(TEXTS["ru"]["order_not_found"], show_alert=True)
         return
@@ -325,7 +340,7 @@ async def review_order(callback: CallbackQuery) -> None:
         return
 
     customer_lang = user_languages.get(customer_id, "en")
-    notice_key = "approved_notice" if status == "approved" else "rejected_notice"
+    notice_key = "approved_notice" if status == "awaiting_payment" else "rejected_notice"
     try:
         await callback.bot.send_message(customer_id, TEXTS[customer_lang][notice_key].format(order=order_id))
     except TelegramAPIError:
@@ -335,15 +350,50 @@ async def review_order(callback: CallbackQuery) -> None:
         await callback.message.edit_reply_markup(reply_markup=None)
     except TelegramAPIError:
         logging.exception("Could not remove review buttons for request %s", order_id)
-    prompt_key = "admin_approved_prompt" if status == "approved" else "admin_rejected_prompt"
+    prompt_key = "admin_approved_prompt" if status == "awaiting_payment" else "admin_rejected_prompt"
     try:
-        await callback.message.answer(TEXTS["ru"][prompt_key].format(order=order_id))
+        await callback.message.answer(
+            TEXTS["ru"][prompt_key].format(order=order_id),
+            reply_markup=payment_confirm_keyboard(order_id) if status == "awaiting_payment" else None,
+        )
     except TelegramAPIError:
         logging.exception("Could not show admin follow-up for request %s", order_id)
     await callback.answer(
-        TEXTS["ru"]["admin_done"].format(order=order_id, status=TEXTS["ru"][f"status_{status}"]),
+        TEXTS["ru"]["admin_done"].format(order=order_id, status=TEXTS["ru"].get(f"status_{status}", status)),
         show_alert=True,
     )
+
+
+@dp.callback_query(F.data.startswith("payment:confirm:"))
+async def confirm_payment(callback: CallbackQuery) -> None:
+    if callback.from_user.id != ADMIN_ID:
+        await callback.answer(TEXTS["ru"]["not_admin"], show_alert=True)
+        return
+    try:
+        order_id = int(callback.data.rsplit(":", 1)[1])
+        result = update_order_status(order_id, "paid", expected_status="awaiting_payment")
+    except (ValueError, sqlite3.Error):
+        logging.exception("Failed to confirm payment for request %s", callback.data)
+        await callback.answer(TEXTS["ru"]["admin_db_error"], show_alert=True)
+        return
+    if result is None:
+        await callback.answer(TEXTS["ru"]["order_not_found"], show_alert=True)
+        return
+    customer_id, changed = result
+    if not changed:
+        await callback.answer(TEXTS["ru"]["admin_already"], show_alert=True)
+        return
+    lang = user_languages.get(customer_id, "en")
+    try:
+        await callback.bot.send_message(customer_id, TEXTS[lang]["paid_notice"].format(order=order_id))
+    except TelegramAPIError:
+        logging.exception("Could not notify customer %s that request %s was paid", customer_id, order_id)
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer(TEXTS["ru"]["admin_paid_prompt"].format(order=order_id))
+    except TelegramAPIError:
+        logging.exception("Could not update payment confirmation message for request %s", order_id)
+    await callback.answer(TEXTS["ru"]["status_paid"], show_alert=True)
 
 
 @dp.message(F.from_user.id == ADMIN_ID)
@@ -495,3 +545,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
