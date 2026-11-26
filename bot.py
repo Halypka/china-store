@@ -45,9 +45,12 @@ TEXTS = {
         "support_sent": "✅ Your message has been sent to our manager.", "language_info": "🌐 Choose your language:",
         "changed": "✅ Language changed!", "invalid_link": "That doesn't look like a product link. Please send a valid link or a product photo.",
         "send_failed": "We couldn't send your message right now. Please try again shortly.",
-        "approved_notice": "✅ Your request №{order} has been approved. The manager will contact you with the next steps.",
+        "approved_notice": "✅ Your request №{order} has been approved. The manager will send payment details in a separate message.",
         "rejected_notice": "Your request №{order} was not approved. Contact the manager if you have questions.",
         "admin_approve": "✅ Approve", "admin_reject": "✖️ Decline", "admin_done": "Request №{order}: {status}",
+        "admin_approved_prompt": "✅ Request №{order} approved. Reply to this request with the payment details; I will forward your message to the customer.",
+        "admin_rejected_prompt": "Request №{order} declined.",
+        "admin_db_error": "Couldn't update the request. Check the bot log and try again.",
         "admin_already": "This request has already been reviewed.", "order_not_found": "Request not found.", "not_admin": "You are not allowed to manage requests.",
         "choose_language": "Please choose your language first:", "admin_sent": "✅ Reply sent to the customer.",
         "customer_unavailable": "I couldn't deliver the reply. The customer may have blocked the bot or deleted their account.",
@@ -65,9 +68,12 @@ TEXTS = {
         "support_sent": "✅ Ваше сообщение отправлено менеджеру.", "language_info": "🌐 Выберите язык:",
         "changed": "✅ Язык изменён!", "invalid_link": "Это не похоже на ссылку на товар. Отправьте корректную ссылку или фотографию товара.",
         "send_failed": "Не удалось отправить сообщение. Пожалуйста, попробуйте ещё раз позже.",
-        "approved_notice": "✅ Ваша заявка №{order} согласована. Менеджер свяжется с вами и сообщит дальнейшие шаги.",
+        "approved_notice": "✅ Ваша заявка №{order} согласована. Менеджер пришлёт реквизиты для оплаты отдельным сообщением.",
         "rejected_notice": "Заявка №{order} не согласована. Если есть вопросы, напишите менеджеру.",
         "admin_approve": "✅ Согласовать", "admin_reject": "✖️ Отклонить", "admin_done": "Заявка №{order}: {status}",
+        "admin_approved_prompt": "✅ Заявка №{order} согласована. Ответь через Reply на эту карточку и отправь реквизиты — я перешлю сообщение клиенту.",
+        "admin_rejected_prompt": "Заявка №{order} отклонена.",
+        "admin_db_error": "Не удалось обновить заявку. Проверь журнал бота и попробуй ещё раз.",
         "admin_already": "Эта заявка уже обработана.", "order_not_found": "Заявка не найдена.", "not_admin": "У вас нет прав управлять заявками.",
         "choose_language": "Сначала выберите язык:", "admin_sent": "✅ Ответ отправлен клиенту.",
         "customer_unavailable": "Не удалось доставить ответ. Возможно, клиент заблокировал бота или удалил аккаунт.",
@@ -85,9 +91,12 @@ TEXTS = {
         "support_sent": "✅ Il messaggio è stato inviato al nostro manager.", "language_info": "🌐 Scegli la tua lingua:",
         "changed": "✅ Lingua modificata!", "invalid_link": "Questo non sembra un link al prodotto. Invia un link valido o una foto del prodotto.",
         "send_failed": "Non siamo riusciti a inviare il messaggio. Riprova tra poco.",
-        "approved_notice": "✅ La tua richiesta n. {order} è stata approvata. Il manager ti contatterà per i prossimi passi.",
+        "approved_notice": "✅ La tua richiesta n. {order} è stata approvata. Il manager invierà i dati per il pagamento in un messaggio separato.",
         "rejected_notice": "La richiesta n. {order} non è stata approvata. Contatta il manager se hai domande.",
         "admin_approve": "✅ Approva", "admin_reject": "✖️ Rifiuta", "admin_done": "Richiesta n. {order}: {status}",
+        "admin_approved_prompt": "✅ Richiesta n. {order} approvata. Rispondi a questa richiesta con i dati di pagamento; inoltrerò il messaggio al cliente.",
+        "admin_rejected_prompt": "Richiesta n. {order} rifiutata.",
+        "admin_db_error": "Impossibile aggiornare la richiesta. Controlla il log del bot e riprova.",
         "admin_already": "Questa richiesta è già stata gestita.", "order_not_found": "Richiesta non trovata.", "not_admin": "Non hai i permessi per gestire le richieste.",
         "choose_language": "Scegli prima la lingua:", "admin_sent": "✅ Risposta inviata al cliente.",
         "customer_unavailable": "Impossibile consegnare la risposta. Il cliente potrebbe aver bloccato il bot o eliminato l'account.",
@@ -207,11 +216,12 @@ def customer_info(message: Message, order: int | None = None, product_type: str 
 
 async def forward_to_admin(message: Message, order: int | None = None, product_type: str | None = None) -> None:
     """Post a Reply-able copy to the admin and persist its customer mapping."""
-    await message.bot.send_message(
+    header = await message.bot.send_message(
         ADMIN_ID,
         customer_info(message, order, product_type),
         reply_markup=order_review_keyboard(order) if order is not None else None,
     )
+    save_reply(header.message_id, message.from_user.id)
     copied = await message.copy_to(chat_id=ADMIN_ID)
     save_reply(copied.message_id, message.from_user.id)
 
@@ -283,8 +293,10 @@ async def choose_language(callback: CallbackQuery) -> None:
 
 @dp.callback_query(F.data.startswith("order:"))
 async def review_order(callback: CallbackQuery) -> None:
+    logging.info("Order callback received: user_id=%s data=%s", callback.from_user.id, callback.data)
     if callback.from_user.id != ADMIN_ID:
-        await callback.answer(TEXTS["en"]["not_admin"], show_alert=True)
+        logging.warning("Rejected order callback from non-admin user_id=%s", callback.from_user.id)
+        await callback.answer(TEXTS["ru"]["not_admin"], show_alert=True)
         return
     try:
         _, action, raw_order_id = callback.data.split(":", 2)
@@ -294,7 +306,12 @@ async def review_order(callback: CallbackQuery) -> None:
         await callback.answer(TEXTS["ru"]["order_not_found"], show_alert=True)
         return
 
-    result = update_order_status(order_id, status)
+    try:
+        result = update_order_status(order_id, status)
+    except sqlite3.Error:
+        logging.exception("Failed to update request %s", order_id)
+        await callback.answer(TEXTS["ru"]["admin_db_error"], show_alert=True)
+        return
     if result is None:
         await callback.answer(TEXTS["ru"]["order_not_found"], show_alert=True)
         return
@@ -314,7 +331,15 @@ async def review_order(callback: CallbackQuery) -> None:
         await callback.message.edit_reply_markup(reply_markup=None)
     except TelegramAPIError:
         logging.exception("Could not remove review buttons for request %s", order_id)
-    await callback.answer(TEXTS["ru"]["admin_done"].format(order=order_id, status=TEXTS["ru"][f"status_{status}"]))
+    prompt_key = "admin_approved_prompt" if status == "approved" else "admin_rejected_prompt"
+    try:
+        await callback.message.answer(TEXTS["ru"][prompt_key].format(order=order_id))
+    except TelegramAPIError:
+        logging.exception("Could not show admin follow-up for request %s", order_id)
+    await callback.answer(
+        TEXTS["ru"]["admin_done"].format(order=order_id, status=TEXTS["ru"][f"status_{status}"]),
+        show_alert=True,
+    )
 
 
 @dp.message(F.from_user.id == ADMIN_ID)
