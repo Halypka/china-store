@@ -32,7 +32,10 @@ jobs:
         shell: pwsh
 
       - name: Package Windows download
-        run: Compress-Archive -Path dist/ChinaStoreBot.exe,dist/.env.example -DestinationPath dist/ChinaStoreBot-windows.zip
+        run: |
+          Copy-Item 'Обновить бота.bat' dist/Обновить бота.bat
+          Copy-Item update_bot.ps1 dist/update_bot.ps1
+          Compress-Archive -Path dist/ChinaStoreBot.exe,dist/.env.example,dist/Обновить бота.bat,dist/update_bot.ps1 -DestinationPath dist/ChinaStoreBot-windows.zip
         shell: pwsh
 
       - name: Upload executable
