@@ -321,7 +321,45 @@ async def review_order(callback: CallbackQuery) -> None:
 async def admin_messages(message: Message) -> None:
     if await deliver_admin_reply(message):
         return
-    # Ordinary admin messages and unrelated replies are ignored quietly.
+    # Let the manager use the customer menu while ignoring ordinary admin chat.
+    if not message.text:
+        if message.photo and message.from_user.id in awaiting_product:
+            awaiting_product.discard(message.from_user.id)
+            order = create_order(message.from_user.id, "photo")
+            lang = user_languages.get(message.from_user.id, "ru")
+            await message.answer(TEXTS[lang]["received"].format(order=order), reply_markup=main_menu(lang))
+            try:
+                await forward_to_admin(message, order, "photo")
+            except TelegramAPIError:
+                logging.exception("Failed forwarding admin test photo request %s", order)
+        return
+    lang = user_languages.get(message.from_user.id, "ru")
+    t = TEXTS[lang]
+    if message.text == t["catalog"]:
+        awaiting_product.add(message.from_user.id)
+        await message.answer(t["catalog_info"])
+        return
+    elif message.text == t["orders"]:
+        await message.answer(orders_text(message.from_user.id, lang), reply_markup=main_menu(lang))
+        return
+    elif message.text == t["support"]:
+        await show_support_info(message, lang)
+        return
+    elif message.text == t["language"]:
+        await message.answer(t["language_info"], reply_markup=language_keyboard())
+        return
+    if message.from_user.id in awaiting_product:
+        awaiting_product.discard(message.from_user.id)
+        if not valid_product_url(message.text):
+            await message.answer(t["invalid_link"], reply_markup=main_menu(lang))
+            return
+        order = create_order(message.from_user.id, "link")
+        await message.answer(t["received"].format(order=order), reply_markup=main_menu(lang))
+        try:
+            await forward_to_admin(message, order, "link")
+        except TelegramAPIError:
+            logging.exception("Failed forwarding admin test link request %s", order)
+    # Other admin messages without a mapped Reply are ignored quietly.
 
 
 @dp.message(F.text)
