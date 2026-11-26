@@ -252,12 +252,21 @@ async def start(message: Message) -> None:
         await message.answer("Welcome to China Store!\n\nChoose your language / Выберите язык / Scegli la lingua:", reply_markup=language_keyboard())
 
 
+async def show_support_info(message: Message, lang: str) -> None:
+    t = TEXTS[lang]
+    contact_line = t["support_contact"].format(username=SUPPORT_USERNAME) if SUPPORT_USERNAME else ""
+    body = "\n\n".join(part for part in (t["support_info"], contact_line) if part)
+    await message.answer(body, reply_markup=main_menu(lang))
+    if SUPPORT_USERNAME:
+        await message.answer(t["support_button"], reply_markup=support_keyboard(lang))
+
+
 @dp.message(Command("help"))
 async def help_command(message: Message) -> None:
     if message.from_user.id == ADMIN_ID:
         return
     lang = user_languages.get(message.from_user.id, "en")
-    await message.answer(TEXTS[lang]["support_info"], reply_markup=main_menu(lang))
+    await show_support_info(message, lang)
 
 
 @dp.callback_query(F.data.startswith("lang:"))
@@ -332,10 +341,7 @@ async def customer_text(message: Message) -> None:
         return
     if message.text == t["support"]:
         awaiting_product.discard(user_id)
-        contact_line = t["support_contact"].format(username=SUPPORT_USERNAME) if SUPPORT_USERNAME else ""
-        await message.answer("\n\n".join(part for part in (t["support_info"], contact_line) if part), reply_markup=main_menu(lang))
-        if SUPPORT_USERNAME:
-            await message.answer(t["support_button"], reply_markup=support_keyboard(lang))
+        await show_support_info(message, lang)
         return
     if message.text == t["language"]:
         await message.answer(t["language_info"], reply_markup=language_keyboard())
